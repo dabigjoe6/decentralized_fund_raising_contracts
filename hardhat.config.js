@@ -23,6 +23,6 @@ module.exports = {
     hardhat: {}
   },
   paths: {
-    artifacts: '../client'
+    artifacts: '../app'
   }
 };
