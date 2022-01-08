@@ -4,6 +4,13 @@ pragma solidity ^0.8.0;
 contract Staker {
 
   mapping(address => uint256) balances;
+  
+  struct HighestBid {
+    address bidAddress;
+    uint amount;
+  }
+
+  HighestBid highestBidder;
 
   uint duration = 2 days;
   uint deadline;
@@ -25,6 +32,11 @@ contract Staker {
     require(msg.value > 0, "Need to stake an amount");
 
     balances[msg.sender] = msg.value + balances[msg.sender];
+
+    if (balances[msg.sender] > highestBidder.amount) {
+      highestBidder.bidAddress = msg.sender;
+      highestBidder.amount = balances[msg.sender];
+    }
 
     emit StakeSuccess(msg.sender, msg.value);
   }
@@ -49,5 +61,13 @@ contract Staker {
 
     payable(msg.sender).transfer(paidAmount);
     emit WithdrawSuccess(msg.sender, paidAmount);
+  }
+
+  function getHighestBidder() external view returns (address, uint) {
+    return (highestBidder.bidAddress, highestBidder.amount);
+  }
+
+  function getDeadline() external view returns (uint) {
+    return deadline;
   }
 }
