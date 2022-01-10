@@ -14,11 +14,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Staker = await hre.ethers.getContractFactory("Staker");
-  const staker = await Staker.deploy();
 
   const Reserve = await hre.ethers.getContractFactory("Reserve");
   const reserve = await Reserve.deploy();
+
+  const Staker = await hre.ethers.getContractFactory("Staker");
+  const staker = await Staker.deploy(reserve.address);
 
   await staker.deployed();
   console.log("Staker deployed to:", staker.address);
